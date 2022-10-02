@@ -1,0 +1,27 @@
+local M = {}
+
+function M.setup()
+    require("toggleterm").setup({
+        open_mapping = [[<c-\>]],
+        hide_numbers = true, -- hide the number column in toggleterm buffers
+        shade_filetypes = {},
+        autochdir = false,
+        shade_terminals = true,
+        shading_factor = 1,
+        start_in_insert = true,
+        terminal_mappings = true, -- whether or not the open mapping applies in the opened terminals
+        persist_size = true,
+        direction = 'float',
+        close_on_exit = true, -- close the terminal window when the process exits
+        shell = "/usr/bin/zsh",
+        auto_scroll = true,
+        float_opts = {
+            border = 'single',
+            width = 150,
+            height = 30,
+            winblend = 3,
+        },
+    })
+end
+
+return M
