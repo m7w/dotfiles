@@ -9,6 +9,9 @@ opt.wildignore:append({ "*.o", "*.pyc", "*.pyo", "*.class" })
 opt.wildignore:append({ "*.swp", "*.swo" })
 opt.wildignore:append({ "*/bin/*", "*/build/*", "*/target/*" })
 
+opt.colorcolumn = "100"
+opt.showbreak = "↳"
+
 opt.shiftwidth = 4
 opt.softtabstop = 4
 opt.tabstop = 4
@@ -17,7 +20,17 @@ opt.expandtab = true
 -- tab size for html, css, xml, js, ts, jsx, vue, json files
 -------------------------------------------------------
 api.nvim_create_autocmd("FileType", {
-	pattern = { "html", "css", "xml", "javascript", "typescript", "javascriptreact", "vue", "svelte", "json" },
+	pattern = {
+		"*.html",
+		"*.css",
+		"*.xml",
+		"*.javascript",
+		"*.typescript",
+		"*.javascriptreact",
+		"*.vue",
+		"*svelte",
+		"*.json",
+	},
 	callback = function()
 		vim.opt_local.shiftwidth = 2
 		vim.opt_local.softtabstop = 2
@@ -27,10 +40,10 @@ api.nvim_create_autocmd("FileType", {
 })
 
 opt.number = true
-local rnuToggle = api.nvim_create_augroup("RelativeNumberToggle", { clear = true })
+api.nvim_create_augroup("rnu_toggle", { clear = true })
 api.nvim_create_autocmd({ "BufEnter", "WinEnter", "FocusGained", "InsertLeave" }, {
 	pattern = "*",
-	group = rnuToggle,
+	group = "rnu_toggle",
 	callback = function()
 		if opt.number and api.nvim_get_mode().mode ~= "i" then
 			opt.relativenumber = true
@@ -39,7 +52,7 @@ api.nvim_create_autocmd({ "BufEnter", "WinEnter", "FocusGained", "InsertLeave" }
 })
 api.nvim_create_autocmd({ "BufLeave", "WinLeave", "FocusLost", "InsertEnter" }, {
 	pattern = "*",
-	group = rnuToggle,
+	group = "rnu_toggle",
 	callback = function()
 		if opt.number then
 			opt.relativenumber = false
