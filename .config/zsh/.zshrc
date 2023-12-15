@@ -1,3 +1,4 @@
+# zmodload zsh/zprof
 ### History
 # /etc/zshrc sourced after .zshenv and overwrite
 # next settings if it placed in .zshenv
@@ -26,7 +27,8 @@ autoload -Uz prompt.zsh; prompt.zsh
 source $ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh
 source $ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 # source $ZDOTDIR/plugins/zsh-interactive-cd/zsh-interactive-cd.plugin.zsh
-# source $ZDOTDIR/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source $ZDOTDIR/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+ZVM_VI_INSERT_ESCAPE_BINDKEY=jj
 source $ZDOTDIR/plugins/bd/bd.zsh
 
 source $ZDOTDIR/scripts.zsh
@@ -48,8 +50,14 @@ bindkey -s '^X@sc' 'cd_with_fzf^M'
 bindkey -s '^X@sd' 'del_with_fzf^M'
 
 # Search in history by Up/Down arrow
-bindkey '^[[A' history-search-backward
-bindkey '^[[B' history-search-forward
+bindkey '^[[A' history-beginning-search-backward
+bindkey '^[[B' history-beginning-search-forward
 
 # aliases
 test -s $HOME/.aliases && . $HOME/.aliases || true
+
+
+# Begin: PlatformIO Core completion support
+eval "$(_PIO_COMPLETE=zsh_source pio)"
+# End: PlatformIO Core completion support
+# zprof

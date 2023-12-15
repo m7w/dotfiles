@@ -12,31 +12,35 @@ opt.wildignore:append({ "*/bin/*", "*/build/*", "*/target/*" })
 opt.colorcolumn = "100"
 opt.showbreak = "↳"
 
+opt.foldminlines = 5
+opt.foldmethod = "expr"
+opt.foldexpr = "nvim_treesitter#foldexpr()"
+opt.foldenable = false
+
 opt.shiftwidth = 4
 opt.softtabstop = 4
 opt.tabstop = 4
 opt.expandtab = true
+
+vim.o.winbar = "%{%v:lua.require'nvim-navic'.get_location()%}"
 -------------------------------------------------------
 -- tab size for html, css, xml, js, ts, jsx, vue, json files
 -------------------------------------------------------
 api.nvim_create_autocmd("FileType", {
 	pattern = {
-		"*.html",
-		"*.css",
-		"*.xml",
-		"*.javascript",
-		"*.typescript",
-		"*.javascriptreact",
-		"*.vue",
-		"*svelte",
-		"*.json",
+		"xml",
+		"html",
+		"css",
+		"json",
+		"javascript",
+		"typescript",
+		"javascriptreact",
+		"typescriptreact",
+		"vue",
+		"svelte",
 	},
-	callback = function()
-		vim.opt_local.shiftwidth = 2
-		vim.opt_local.softtabstop = 2
-		vim.opt_local.tabstop = 2
-		vim.opt_local.expandtab = true
-	end,
+	group = api.nvim_create_augroup("tab_eq_2", { clear = true }),
+	command = "setlocal shiftwidth=2 softtabstop=2 tabstop=2 expandtab",
 })
 
 opt.number = true

@@ -1,5 +1,14 @@
 local M = {}
 
+-- setup neodev BEFORE lspocnfig
+---@diagnostic disable unused-local
+require("neodev").setup({
+	override = function(root_dir, library)
+		library.enabled = true
+		library.plugins = true
+	end,
+})
+
 local lsp = require("lspconfig")
 
 -- Diagnostic options, see: `:help vim.diagnostic.config`
@@ -19,12 +28,22 @@ vim.diagnostic.config({
 -- Show line diagnostics automatically in hover window
 vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
 	pattern = "*",
+	group = vim.api.nvim_create_augroup("auto_diagnostics", { clear = true }),
 	callback = function()
-		vim.diagnostic.open_float(nil, { focus = false })
+		-- vim.diagnostic.open_float(nil, { focus = false })
+		vim.diagnostic.open_float({ focus = false })
 	end,
 })
 
 local function on_attach(client, bufnr)
+	if client.server_capabilities.documentSymbolProvider then
+		require("nvim-navic").attach(client, bufnr)
+	end
+
+	if client.server_capabilities.inlayHintProvider then
+		vim.lsp.inlay_hint(bufnr, true)
+	end
+
 	-- Enable completion triggered by <c-x><c-o>
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
@@ -36,7 +55,7 @@ local function on_attach(client, bufnr)
 	require("config.lsp.null-ls.formatters").setup(client, bufnr)
 end
 
-local capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+local capabilities = require("cmp_nvim_lsp").default_capabilities(vim.lsp.protocol.make_client_capabilities())
 
 capabilities.textDocument.completion.completionItem.documentationFormat = { "markdown", "plaintext" }
 capabilities.textDocument.completion.completionItem.snippetSupport = true
@@ -66,6 +85,8 @@ vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.s
 local servers = {
 	"clangd",
 	"cssls",
+	-- "gradle_ls",
+	"helm_ls",
 	"html",
 	"pyright",
 	"svelte",
@@ -86,9 +107,11 @@ function M.setup()
 	end
 
 	require("config.lsp.volar").setup(opts)
-	require("config.lsp.sumneko").setup(opts)
-	require("config.lsp.gopsl").setup(opts)
+	require("config.lsp.lua_ls").setup(opts)
+	require("config.lsp.gopls").setup(opts)
+	require("config.lsp.groovy").setup(opts)
 	require("config.lsp.texlab").setup(opts)
+	require("config.lsp.yamlls").setup(opts)
 
 	-- null-ls: formatters, linters, hover.
 	require("config.lsp.null-ls").setup(opts)

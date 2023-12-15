@@ -11,11 +11,6 @@ local root_modules = {
 local cache = (_G.__luacache or {}).cache
 
 function M.reloadConfig()
-	local file = io.open("modules.txt", "w")
-	for module, _ in pairs(package.loaded) do
-		package.loaded[module] = nil
-	end
-	io.close(file)
 	for _, module in ipairs(root_modules) do
 		package.loaded[module] = nil
 		if cache then
@@ -36,6 +31,13 @@ function M.reloadConfig()
 	if reloaded then
 		vim.notify("Config reloaded!!!")
 	end
+end
+
+local Terminal = require("toggleterm.terminal").Terminal
+local lazygit = Terminal:new({ cmd = "lazygit", hidden = true })
+
+function M.lazygit_toggle()
+	lazygit:toggle()
 end
 
 return M

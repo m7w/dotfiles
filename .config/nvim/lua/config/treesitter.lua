@@ -19,22 +19,27 @@ function M.setup()
 		incremental_selection = {
 			enable = true,
 			keymaps = {
-				init_selection = "gnn",
-				node_incremental = "grn",
+				init_selection = "<c-space>",
+				node_incremental = "<c-space>",
+				node_decremental = "<BS>",
 				scope_incremental = "grc",
-				node_decremental = "grm",
 			},
 		},
 
 		indent = {
-			enable = true,
-			-- disable = { "python", "java", "rust", "lua" }
+			enable = false, -- when true produced bad results
+			-- disable = { "python", "java", "rust", "lua", "typescript" },
 		},
 
 		-- vim-matchup
 		matchup = {
 			enable = true,
 		},
+
+        --nvim-ts-autotag
+        autotag = {
+            enable = true,
+        },
 
 		-- nvim-treesitter-textobjects
 		textobjects = {

@@ -1,15 +1,16 @@
 ### Completion
 # Additional completions
-fpath=($ZDOTDIR/plugins/zsh-completions/src $fpath)
-
-autoload -Uz compinit
-for dump in $ZDOTDIR/.zcompdump(N.mh+24); do
-    compinit
-done
-compinit -C
-_comp_options+=(globdots)
+fpath=($HOME/.local/share/zsh/completions $fpath)
 
 zmodload zsh/complist
+
+autoload -Uz compinit
+if [ $(find $ZDOTDIR/.zcompdump -mtime +1) ]; then
+    compinit
+else
+    compinit -C
+fi
+_comp_options+=(globdots)
 
 # Options
 setopt AUTO_LIST

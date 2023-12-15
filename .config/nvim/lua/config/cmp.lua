@@ -17,8 +17,8 @@ function M.setup()
 		},
 
 		mapping = cmp.mapping.preset.insert({
-			["<C-f>"] = cmp.mapping(cmp.mapping.scroll_docs(4), { "i", "c" }),
-			["<C-b>"] = cmp.mapping(cmp.mapping.scroll_docs(-4), { "i", "c" }),
+			["<C-f>"] = cmp.mapping.scroll_docs(4),
+			["<C-b>"] = cmp.mapping.scroll_docs(-4),
 			["<C-Space>"] = cmp.mapping.complete(),
 			["<C-e>"] = cmp.mapping.abort(),
 			["<CR>"] = cmp.mapping.confirm({
@@ -59,14 +59,18 @@ function M.setup()
 			end, { "i", "s" }),
 		}),
 
-		sources = cmp.config.sources({
+		sources = {
 			{ name = "nvim_lsp" },
 			{ name = "nvim_lsp_signature_help" },
-			{ name = "treesitter" },
 			{ name = "luasnip" },
 			{ name = "buffer" },
 			{ name = "path" },
-		}),
+		},
+		experimental = {
+			ghost_text = {
+				hl_group = "LspCodeLens",
+			},
+		},
 	})
 
 	-- Use buffer source for `/` (if you enabled `native_menu`, this won't work anymore).
@@ -84,6 +88,18 @@ function M.setup()
 			{ name = "path" },
 			{ name = "cmdline" },
 		}),
+	})
+
+	-- Use cmp with dad-completion for sql completion
+	vim.api.nvim_create_autocmd("FileType", {
+		group = vim.api.nvim_create_augroup("sql_complete", { clear = true }),
+		pattern = { "sql", "plsql" },
+		command = [[lua require('cmp').setup.buffer({ 
+            sources = {
+                { name = 'vim-dadbod-completion' },
+                { name = 'buffer' },
+            }, 
+        })]],
 	})
 
 	-- Insert `(` after select function or method item
