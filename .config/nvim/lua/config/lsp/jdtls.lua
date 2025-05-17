@@ -8,17 +8,16 @@ function M.javap_private()
 		local cp = table.concat(resp.classpaths, ":")
 		local buf = vim.api.nvim_create_buf(false, true)
 		vim.api.nvim_win_set_buf(0, buf)
-		vim.fn.termopen({ "javap", "-p", "--class-path", cp, classname })
+		vim.fn.jobstart({ "javap", "-p", "--class-path", cp, classname }, { term = true })
 	end)
 end
+
 vim.api.nvim_create_user_command("JdtPrivate", [[lua require("config.lsp.jdtls").javap_private()]], {})
 
 function M.setup()
 	local on_attach = function(client, bufnr)
 		-- Show current content
 		require("nvim-navic").attach(client, bufnr)
-
-		vim.lsp.inlay_hint(bufnr, true)
 
 		-- Remove annoying jdt:// links in hover in java files
 		local orig_open_floating_preview = vim.lsp.util.open_floating_preview
@@ -30,27 +29,15 @@ function M.setup()
 			return orig_open_floating_preview(contents, syntax, opts)
 		end
 
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = vim.api.nvim_create_augroup("java_organize_imports", { clear = true }),
-			pattern = "*.java",
-			callback = function()
-				require("jdtls").organize_imports()
-				-- require("config.lsp.null-ls.formatters").format(bufnr)
-			end,
-		})
+		-- vim.api.nvim_create_autocmd("BufWritePre", {
+		-- 	group = vim.api.nvim_create_augroup("java_organize_imports", { clear = true }),
+		-- 	pattern = "*.java",
+		-- 	callback = function()
+		-- 		require("jdtls").organize_imports()
+		-- 	end,
+		-- })
 
-		local function buf_set_keymap(...)
-			vim.api.nvim_buf_set_keymap(bufnr, ...)
-		end
-
-		local function buf_set_option(...)
-			vim.api.nvim_buf_set_option(bufnr, ...)
-		end
-
-		buf_set_option("omnifunc", "v:lua.vim.lsp.omnifunc")
-
-		-- Formatting
-		require("config.lsp.null-ls.formatters").setup(client, bufnr)
+		vim.api.nvim_set_option_value("omnifunc", "v:lua.vim.lsp.omnifunc", { buf = bufnr })
 
 		-- Mappings.
 		-- Common
@@ -58,6 +45,10 @@ function M.setup()
 
 		-- Java specific
 		local opts = { noremap = true, silent = true }
+		local function buf_set_keymap(...)
+			vim.api.nvim_buf_set_keymap(bufnr, ...)
+		end
+
 		buf_set_keymap("n", "<leader>di", "<Cmd>lua require('jdtls').organize_imports()<CR>", opts)
 		buf_set_keymap("n", "<leader>dt", "<Cmd>lua require('jdtls').test_class()<CR>", opts)
 		buf_set_keymap("n", "<leader>dn", "<Cmd>lua require('jdtls').test_nearest_method()<CR>", opts)
@@ -71,7 +62,6 @@ function M.setup()
 
 	local root_markers = { "build.gradle", "pom.xml", "gradlew", "mvnw", ".git" }
 	local root_dir = require("jdtls.setup").find_root(root_markers)
-	local home = os.getenv("HOME")
 
 	local capabilities = {
 		workspace = {
@@ -85,10 +75,13 @@ function M.setup()
 			},
 		},
 	}
+	capabilities = vim.tbl_deep_extend(
+		"force",
+		vim.lsp.protocol.make_client_capabilities(),
+		require("lsp-file-operations").default_capabilities()
+	)
 
-	local workspace_folder = home
-		.. "/.local/share/nvim/mason/jdtls/workspace/"
-		.. vim.fn.fnamemodify(root_dir, ":p:h:t")
+	local workspace_folder = vim.fn.expand("$MASON/jdtls/workspace/") .. vim.fn.fnamemodify(root_dir, ":p:h:t")
 
 	local config = {
 		flags = {
@@ -100,6 +93,13 @@ function M.setup()
 
 	config.settings = {
 		java = {
+			configuration = {
+				runtimes = {
+					name = "JavaSE-21",
+					path = "/usr/lib64/jvm/java-21-openjdk-21/",
+					default = true,
+				},
+			},
 			signatureHelp = { enabled = true },
 			completion = {
 				favoriteStaticMembers = {
@@ -123,11 +123,6 @@ function M.setup()
 					enabled = "all",
 				},
 			},
-			format = {
-				settings = {
-					-- url = home .. "/.local/share/nvim/mason/jdtls/eclipse-java-google-style.xml",
-				},
-			},
 			codeGeneration = {
 				toString = {
 					template = "${object.className}{${member.name()}=${member.value}, ${otherMembers}}",
@@ -143,16 +138,16 @@ function M.setup()
 		"-Dlog.protocol=true",
 		"-Dlog.level=ALL",
 		"-Xmx4g",
-		"-javaagent:" .. home .. "/.local/share/nvim/mason/packages/jdtls/lombok.jar",
+		"-javaagent:" .. vim.fn.expand("$MASON/packages/jdtls/lombok.jar"),
 		"--add-modules=ALL-SYSTEM",
 		"--add-opens",
 		"java.base/java.util=ALL-UNNAMED",
 		"--add-opens",
 		"java.base/java.lang=ALL-UNNAMED",
 		"-jar",
-		vim.fn.glob(home .. "/.local/share/nvim/mason/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
+		vim.fn.glob("$MASON/packages/jdtls/plugins/org.eclipse.equinox.launcher_*.jar"),
 		"-configuration",
-		home .. "/.local/share/nvim/mason/packages/jdtls/config_linux",
+		vim.fn.expand("$MASON/packages/jdtls/config_linux"),
 		"-data",
 		workspace_folder,
 	}
@@ -166,56 +161,15 @@ function M.setup()
 	extendedClientCapabilities.onCompletionItemSelectedCommand = "editor.action.triggerParameterHints"
 
 	local bundles = {
-		vim.fn.glob(
-			home
-				.. "/.local/share/nvim/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"
-		),
+		vim.fn.glob("$MASON/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar"),
 	}
 
-	vim.list_extend(
-		bundles,
-		vim.split(vim.fn.glob(home .. "/.local/share/nvim/mason/packages/java-test/extension/server/*.jar"), "\n")
-	)
+	vim.list_extend(bundles, vim.split(vim.fn.glob("$MASON/packages/java-test/extension/server/*.jar"), "\n"))
 
 	config.init_options = {
 		extendedClientCapabilities = extendedClientCapabilities,
 		bundles = bundles,
 	}
-
-	-- UI
-	local finders = require("telescope.finders")
-	local sorters = require("telescope.sorters")
-	local actions = require("telescope.actions")
-	local pickers = require("telescope.pickers")
-	require("jdtls.ui").pick_one_async = function(items, prompt, label_fn, cb)
-		local opts = {}
-		pickers
-			.new(opts, {
-				prompt_title = prompt,
-				finder = finders.new_table({
-					results = items,
-					entry_maker = function(entry)
-						return {
-							value = entry,
-							display = label_fn(entry),
-							ordinal = label_fn(entry),
-						}
-					end,
-				}),
-				sorter = sorters.get_generic_fuzzy_sorter(),
-				attach_mappings = function(prompt_bufnr)
-					actions.goto_file_selection_edit:replace(function()
-						local selection = actions.get_selected_entry(prompt_bufnr)
-						actions.close(prompt_bufnr)
-
-						cb(selection.value)
-					end)
-
-					return true
-				end,
-			})
-			:find()
-	end
 
 	-- Server
 	require("jdtls").start_or_attach(config)

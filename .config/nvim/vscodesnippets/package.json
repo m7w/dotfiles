@@ -1,0 +1,19 @@
+{
+  "name": "apex-snippets",
+  "contributes": {
+    "snippets": [
+      {
+        "language": [
+          "apex"
+        ],
+        "path": "./apex.json"
+      },
+      {
+        "language": [
+          "php"
+        ],
+        "path": "./php.json"
+      }
+    ]
+  }
+}

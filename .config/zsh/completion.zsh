@@ -4,13 +4,17 @@ fpath=($HOME/.local/share/zsh/completions $fpath)
 
 zmodload zsh/complist
 
-autoload -Uz compinit
-if [ $(find $ZDOTDIR/.zcompdump -mtime +1) ]; then
-    compinit
-else
-    compinit -C
-fi
+
+autoload -Uz compinit && compinit
+# if [ $(find $ZDOTDIR/.zcompdump -mmin +120) ]; then
+#     compinit
+# else
+#     compinit -CD -d $ZDOTDIR/.zcompdump
+# fi
 _comp_options+=(globdots)
+
+autoload bashcompinit && bashcompinit
+complete -C '/usr/local/bin/aws_completer' aws
 
 # Options
 setopt AUTO_LIST

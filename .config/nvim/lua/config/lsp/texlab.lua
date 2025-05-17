@@ -63,7 +63,7 @@ end
 
 local function load_log()
 	vim.fn.setloclist(0, {}, "r")
-	vim.cmd("laddfile " .. build_dir .. "/" .. vim.fn.expand("%:r") .. ".log")
+	vim.cmd("laddfile " .. vim.fn.expand("%:r") .. build_dir .. "/" .. vim.fn.expand("%:r") .. ".log")
 end
 
 local function qf_is_open()

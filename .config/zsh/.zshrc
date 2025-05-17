@@ -43,21 +43,32 @@ setopt SHARE_HISTORY
 # widgets
 zle -N open_with_fzf
 zle -N cd_with_fzf
+zle -N del_with_fzf
 
 # bindkey
-bindkey -s '^X@so' 'open_with_fzf^M'
-bindkey -s '^X@sc' 'cd_with_fzf^M'
-bindkey -s '^X@sd' 'del_with_fzf^M'
+bindkey -M viins -s '^X@so' 'open_with_fzf^M'
+bindkey -M viins -s '^X@sc' 'cd_with_fzf^M'
+bindkey -M viins -s '^X@sd' 'del_with_fzf^M'
+
+bindkey -M vicmd -s '^X@so' 'open_with_fzf^M'
+bindkey -M vicmd -s '^X@so' 'cd_with_fzf^M'
+bindkey -M vicmd -s '^X@so' 'del_with_fzf^M'
 
 # Search in history by Up/Down arrow
-bindkey '^[[A' history-beginning-search-backward
-bindkey '^[[B' history-beginning-search-forward
+# bindkey -M viins '^[[A' history-beginning-search-backward
+# bindkey -M viins '^[[B' history-beginning-search-forward
+#
+# bindkey -M vicmd '^[[A' history-beginning-search-backward
+# bindkey -M vicmd '^[[B' history-beginning-search-forward
 
 # aliases
 test -s $HOME/.aliases && . $HOME/.aliases || true
 
+SF_AC_ZSH_SETUP_PATH=/home/max/.cache/sf/autocomplete/zsh_setup && test -f $SF_AC_ZSH_SETUP_PATH && source $SF_AC_ZSH_SETUP_PATH
 
-# Begin: PlatformIO Core completion support
-eval "$(_PIO_COMPLETE=zsh_source pio)"
-# End: PlatformIO Core completion support
+source <(fzf --zsh)
+
+eval "$(~/.local/bin/mise activate zsh)"
+
+zvm_after_init_commands+=(eval "$(atuin init zsh)")
 # zprof

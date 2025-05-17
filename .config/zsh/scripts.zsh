@@ -1,3 +1,7 @@
+nnvim() {
+    NVIM_APPNAME="nvim_test" ~/programs/nvim-nightly/bin/nvim
+}
+
 serve() {
     python3 -m http.server 8000
 }

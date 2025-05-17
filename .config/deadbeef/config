@@ -14,7 +14,7 @@ artwork.save_to_music_folders 0
 artwork.save_to_music_folders_relative_path cover.jpg
 cli_add_playlist_name Default
 close_send_to_tray 1
-deadbeef_version 1.9.5
+deadbeef_version 1.9.6
 filebrowser.autofilter 1
 filebrowser.bgcolor 
 filebrowser.bgcolor_selected 
@@ -45,7 +45,7 @@ filebrowser.showicons 1
 filebrowser.sidebar_width 214
 filebrowser.sort_treeview 1
 filebrowser.treelines 0
-filechooser.lastdir file:///mnt/ext3tb/Music
+filechooser.lastdir file:///home/max/%D0%94%D0%BE%D0%BA%D1%83%D0%BC%D0%B5%D0%BD%D1%82%D1%8B/Langs/English
 gtkui.columns.playlist [{"title":"Album Art","id":"8","format":"","sort_format":"","size":"231","align":"0","color_override":"0","color":"#ff232627"},{"title":"♫","id":"1","format":"%playstatus%","sort_format":"","size":"45","align":"0","color_override":"0","color":"#ff000000"},{"title":"Artist / Album","id":"-1","format":"$if(%artist%,%artist%,Unknown Artist)[ - %album%]","sort_format":"","size":"257","align":"0","color_override":"0","color":"#ff000000"},{"title":"Track No","id":"-1","format":"%tracknumber%","sort_format":"","size":"69","align":"1","color_override":"0","color":"#ff000000"},{"title":"Title","id":"-1","format":"%title%","sort_format":"","size":"371","align":"0","color_override":"0","color":"#ff000000"},{"title":"Duration","id":"-1","format":"%length%","sort_format":"","size":"71","align":"0","color_override":"0","color":"#ff000000"}]
 gtkui.columns.search [{"title":"Artist / Album","id":"-1","format":"$if(%artist%,%artist%,Unknown Artist)[ - %album%]","sort_format":"","size":"150","align":"0","color_override":"0","color":"#ff000000"},{"title":"Track No","id":"-1","format":"%tracknumber%","sort_format":"","size":"50","align":"1","color_override":"0","color":"#ff000000"},{"title":"Title","id":"-1","format":"%title%","sort_format":"","size":"150","align":"0","color_override":"0","color":"#ff000000"},{"title":"Duration","id":"-1","format":"%length%","sort_format":"","size":"50","align":"0","color_override":"0","color":"#ff000000"}]
 gtkui.hide_tray_icon 0
@@ -55,7 +55,7 @@ gtkui.search.group_by_tf
 gtkui.show_menu 1
 gtkui.statusbar.visible 1
 gtkui.statusbar_seltime 1
-gtkui.tabscroll 0
+gtkui.tabscroll 312
 gtkui.titlebar_playing_tf DeaDBeeF - %artist% - %title%
 gtkui.titlebar_stopped_tf DeaDBeeF
 gui_plugin GTK3
@@ -116,28 +116,30 @@ mainwin.geometry.x 40
 mainwin.geometry.y 40
 network.proxy.port 8080
 output_plugin alsa
-playback.loop 1
-playback.volume.normalized 0.2533159
-playlist.current 0
+playback.loop 0
+playback.volume.normalized 0.1703508
+playlist.current 3
 playlist.cursor.0 54
 playlist.cursor.1 0
 playlist.cursor.2 1
 playlist.cursor.3 11
-playlist.cursor.4 52
+playlist.cursor.4 53
 playlist.cursor.5 0
 playlist.cursor.6 -1
 playlist.cursor.7 0
 playlist.cursor.8 0
+playlist.cursor.9 3
 playlist.pin.groups 1
-playlist.scroll.0 2425
-playlist.scroll.1 0
+playlist.scroll.0 2420
+playlist.scroll.1 909
 playlist.scroll.2 0
 playlist.scroll.3 0
-playlist.scroll.4 1296
-playlist.scroll.5 1512
+playlist.scroll.4 1293
+playlist.scroll.5 1509
 playlist.scroll.6 0
 playlist.scroll.7 0
 playlist.scroll.8 0
+playlist.scroll.9 -3
 playlist.scroll.cursorfollowplayback 1
 playlist.tab.00000 The Algorithm
 playlist.tab.00001 Pink Floyd - A Foot in the Door - The Best Of Pink Floyd (2011 Remastered Version) (2011)
@@ -148,15 +150,17 @@ playlist.tab.00005 Soen
 playlist.tab.00006 Tool
 playlist.tab.00007 Slayer
 playlist.tab.00008 Anthrax
+playlist.tab.00009 words
 prefwin.geometry.h 598
 prefwin.geometry.maximized 1
 prefwin.geometry.w 699
 prefwin.geometry.x 438
 prefwin.geometry.y 54
-resume.paused 1
-resume.playlist 0
-resume.position 103.93295
-resume.track 33
+resume.paused 0
+resume.playlist -1
+resume.position -1.000000
+resume.track -1
+streamer.bit_override 0
 streamer.samplerate 44100
 streamer.samplerate_mult_44 44100
 streamer.samplerate_mult_48 48000

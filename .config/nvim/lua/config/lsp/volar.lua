@@ -2,10 +2,15 @@ local M = {}
 
 function M.setup(opts)
 	local default_opts = {
-		filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue", "json" },
+		-- filetypes = { "vue" },
 		init_options = {
+			-- vue = {
+			-- 	hybridMode = false,
+			-- },
 			typescript = {
-				serverPath = "",
+				-- tsdk = vim.fn.expand(
+				-- 	"$HOME/.local/share/nvim/mason/packages/typescript-language-server/node_modules/typescript/lib"
+				-- ),
 				inlayHints = {
 					includeInlayParameterNameHints = "all",
 					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
@@ -29,8 +34,7 @@ function M.setup(opts)
 				signatureHelp = true,
 				codeAction = true,
 				codeLens = true,
-				-- not implemented - https://github.com/neovim/neovim/pull/15723
-				semanticTokens = false,
+				semanticTokens = true,
 				diagnostics = true,
 				schemaRequestService = true,
 				workspaceSymbol = true,
