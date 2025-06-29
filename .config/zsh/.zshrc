@@ -71,4 +71,8 @@ source <(fzf --zsh)
 eval "$(~/.local/bin/mise activate zsh)"
 
 zvm_after_init_commands+=(eval "$(atuin init zsh)")
+
+eval "$(uv generate-shell-completion zsh)"
+
+. "$HOME/.local/share/../bin/env"
 # zprof

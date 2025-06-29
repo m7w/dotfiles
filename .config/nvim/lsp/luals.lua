@@ -1,4 +1,4 @@
-vim.lsp.config.luals = {
+return {
   settings = {
     Lua = {
       diagnostic = {
@@ -10,6 +10,10 @@ vim.lsp.config.luals = {
       },
       workspace = {
         checkThirdParty = false,
+        library = {
+          vim.env.VIMRUNTIME,
+          "${3rd}/luv/library",
+        },
       },
       telemetry = {
         enable = false,
@@ -20,5 +24,3 @@ vim.lsp.config.luals = {
     },
   },
 }
-
-vim.lsp.enable("luals")
